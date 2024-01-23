@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "725ec4c1-a00b-4c16-99cc-16d676583120": {
+      "ProjectGuid": "725ec4c1-a00b-4c16-99cc-16d676583120",
+      "DisplayName": "ShowLootOnPlanet",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

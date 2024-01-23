@@ -1,0 +1,7 @@
+{
+	"name": "ShowLootOnPlanet",
+	"description": "Shows loot on the planet, supports ShipLoot by tinyhoot",
+	"version_number": "1.0.0",
+	"dependencies": ["ainavt.lc.lethalconfig"],
+	"website_url": "https://github.com/funtime-foxy1/ShowLootOnPlanet"
+}
