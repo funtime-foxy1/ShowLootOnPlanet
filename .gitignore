@@ -1,3 +1,4 @@
-bin
-obj
-ShowLootOnPlanet
+bin/
+obj/
+ShowLootOnPlanet/
+.vs/
