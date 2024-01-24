@@ -59,7 +59,6 @@ namespace ShowLootOnPlanet
             color.SettingChanged += Color_SettingChanged;
 
             harmony.PatchAll(typeof(PlanetModBase));
-            harmony.PatchAll(typeof(PlayerControllerBPatch));
             harmony.PatchAll(typeof(ScanPatch));
         }
 

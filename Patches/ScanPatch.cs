@@ -47,7 +47,7 @@ namespace ShowLootOnPlanet.Patches
 			PlanetModBase.log.LogInfo("Amount of objects: " + objectAmount + " || Value of all: " + TotalValue);
 
 			if (objectAmount > 0) {
-                textMesh.text = $"MOON: ${TotalValue:F0} (${objectAmount})";
+                textMesh.text = $"MOON: ${TotalValue:F0} (" + objectAmount + ")";
                 displayLeft = DisplayTime;
                 if (!counter.activeSelf)
                     GameNetworkManager.Instance.StartCoroutine(PlanetLoot());
