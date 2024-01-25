@@ -25,6 +25,14 @@ namespace ShowLootOnPlanet
         Purple,
         Pink
     }
+    public enum OffsetGUI
+    {
+        Original,
+        Lowered,
+        Lowered2,
+        Uppered,
+        Uppered2
+    }
     [BepInDependency("ainavt.lc.lethalconfig")]
     [BepInPlugin(GUID, NAME, VERSION)]
     public class PlanetModBase : BaseUnityPlugin
@@ -40,6 +48,10 @@ namespace ShowLootOnPlanet
         internal static ManualLogSource log;
 
         public static BepInEx.Configuration.ConfigEntry<ColorType> color;
+        public static BepInEx.Configuration.ConfigEntry<OffsetGUI> offset;
+        public static BepInEx.Configuration.ConfigEntry<float> fontSize;
+        public static BepInEx.Configuration.ConfigEntry<float> lifetime;
+
         public static ColorType colorValue;
 
         void Awake()
@@ -52,9 +64,18 @@ namespace ShowLootOnPlanet
 
             log.LogInfo("The mod has awakened!");
 
-            color = Config.Bind("General", "Color", ColorType.Green, "Change the color of the text!");
-            LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<ColorType>(color, new EnumDropDownOptions {}));
+            color = Config.Bind("Customize", "Color", ColorType.Green, "Change the color of the text!");
+            LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<ColorType>(color, new EnumDropDownOptions { RequiresRestart = false }));
             color.Value = colorValue;
+
+            lifetime = Config.Bind("Customize", "Lifetime", 3f, "How long does it last? ShipLoot: 5");
+            LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(lifetime, new FloatStepSliderOptions { RequiresRestart = false, Step = .25f, Min = 1f, Max = 6f }));
+
+            offset = Config.Bind("Support", "Offset", OffsetGUI.Original, "Just in case for other mods intersect. (If needed, may turn into a slider)");
+            LethalConfigManager.AddConfigItem(new EnumDropDownConfigItem<OffsetGUI>(offset, new EnumDropDownOptions { RequiresRestart = false }));
+
+            fontSize = Config.Bind("Customize", "Font Size", 19f, "Change the size of the text.");
+            LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(fontSize, new FloatStepSliderOptions { RequiresRestart = false, Step = .25f, Min = 6, Max = 24 }));
 
             color.SettingChanged += Color_SettingChanged;
 

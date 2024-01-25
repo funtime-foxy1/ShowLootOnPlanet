@@ -15,7 +15,7 @@ namespace ShowLootOnPlanet.Patches
         static GameObject counter;
         static TextMeshProUGUI textMesh;
         private static float displayLeft;
-        private const float DisplayTime = 2f;
+        private static float DisplayTime = 3f;
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(HUDManager), "PingScan_performed")]
@@ -23,8 +23,8 @@ namespace ShowLootOnPlanet.Patches
         {
             if (GameNetworkManager.Instance.localPlayerController == null)
                 return;
-            if (GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom)
-                return;
+            /*if (GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom)
+                return;*/
 
             PlanetModBase.log.LogInfo("SCAN!");
             if (!counter)
@@ -46,8 +46,11 @@ namespace ShowLootOnPlanet.Patches
 			}
 			PlanetModBase.log.LogInfo("Amount of objects: " + objectAmount + " || Value of all: " + TotalValue);
 
-			if (objectAmount > 0) {
+            if (objectAmount > 0) {
+                DisplayTime = PlanetModBase.lifetime.Value;
+                StyleText();
                 textMesh.text = $"MOON: ${TotalValue:F0} (" + objectAmount + ")";
+                
                 displayLeft = DisplayTime;
                 if (!counter.activeSelf)
                     GameNetworkManager.Instance.StartCoroutine(PlanetLoot());
@@ -64,23 +67,13 @@ namespace ShowLootOnPlanet.Patches
                 yield return new WaitForSeconds(time);
             }
             counter.SetActive(false);
+            Object.Destroy(counter);
         }
 
-        /// <summary>
-        /// Copy an existing object loaded by the game for the display of ship loot and put it in the right position.
-        /// </summary>
-        private static void CopyValueCounter()
+        private static void StyleText()
         {
-            GameObject _counter = GameObject.Find("/Systems/UI/Canvas/IngamePlayerHUD/BottomMiddle/ValueCounter");
-            if (!counter)
-                PlanetModBase.log.LogWarning("Failed to find ValueCounter object to copy!");
-            counter = Object.Instantiate(_counter.gameObject, _counter.transform.parent, false);
-            counter.transform.Translate(0f, 1f, 0f);
-            Vector3 pos = counter.transform.localPosition;
-            counter.transform.localPosition = new Vector3(pos.x + 50f, -50f, pos.z);
-            textMesh = counter.GetComponentInChildren<TextMeshProUGUI>();
-            PlanetModBase.log.LogInfo("Child1: " + counter.GetComponentsInChildren<Transform>()[1]);
-            PlanetModBase.log.LogInfo("Child2: " + counter.GetComponentsInChildren<Transform>()[2]);
+            textMesh.fontSize = PlanetModBase.fontSize.Value;
+            
 
             switch (PlanetModBase.colorValue)
             {
@@ -109,6 +102,40 @@ namespace ShowLootOnPlanet.Patches
                     textMesh.color = new Color(0.9750692f, 0.3803922f, 1);
                     break;
                 default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Copy an existing object loaded by the game for the display of ship loot and put it in the right position.
+        /// </summary>
+        private static void CopyValueCounter()
+        {
+            GameObject _counter = GameObject.Find("/Systems/UI/Canvas/IngamePlayerHUD/BottomMiddle/ValueCounter");
+            if (!counter)
+                PlanetModBase.log.LogWarning("Failed to find ValueCounter object to copy!");
+            counter = Object.Instantiate(_counter.gameObject, _counter.transform.parent, false);
+            
+            counter.transform.Translate(0f, 1f, 0f);
+            Vector3 pos = counter.transform.localPosition;
+            counter.transform.localPosition = new Vector3(pos.x + 50f, -50f, pos.z);
+            textMesh = counter.GetComponentInChildren<TextMeshProUGUI>();
+
+            switch (PlanetModBase.offset.Value)
+            {
+                case OffsetGUI.Original:
+                    break;
+                case OffsetGUI.Lowered:
+                    counter.transform.Translate(0, -.18f, 0f);
+                    break;
+                case OffsetGUI.Lowered2:
+                    counter.transform.Translate(-0, -.3f, 0f);
+                    break;
+                case OffsetGUI.Uppered:
+                    counter.transform.Translate(0, .18f, 0f);
+                    break;
+                case OffsetGUI.Uppered2:
+                    counter.transform.Translate(0, .3f, 0f);
                     break;
             }
         }

@@ -98,7 +98,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Patches\PlayerControllerBPatch.cs" />
     <Compile Include="Patches\ScanPatch.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
