@@ -17,7 +17,7 @@ namespace ShowLootOnPlanet.Patches
         private static float displayLeft;
         private static float DisplayTime = 3f;
 
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(typeof(HUDManager), "PingScan_performed")]
         private static void OnScan(HUDManager __instance, InputAction.CallbackContext context)
         {
@@ -30,7 +30,9 @@ namespace ShowLootOnPlanet.Patches
             if (!counter)
                 CopyValueCounter();
 
-            System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + 91);
+            // OLD CODE:
+
+            /*System.Random random = new System.Random(StartOfRound.Instance.randomMapSeed + 91);
 			int objectAmount = 0;
 			int TotalValue = 0;
 			int num4 = 0;
@@ -43,13 +45,36 @@ namespace ShowLootOnPlanet.Patches
 					TotalValue += Mathf.Clamp(random.Next(array[num5].itemProperties.minValue, array[num5].itemProperties.maxValue), array[num5].scrapValue - 6 * num5, array[num5].scrapValue + 9 * num5);
 					objectAmount++;
 				}
-			}
-			PlanetModBase.log.LogInfo("Amount of objects: " + objectAmount + " || Value of all: " + TotalValue);
+			}*/
+            //PlanetModBase.log.LogInfo("Amount of objects: " + objectAmount + " || Value of all: " + TotalValue);
 
-            if (objectAmount > 0) {
+
+            //NEW CODE FROM Nebulaetrix-ScanFix-1.0.3
+            GrabbableObject[] array = Object.FindObjectsOfType<GrabbableObject>();
+            int objectsOutside = 0;
+            int outsideValue = 0;
+
+            // Not used, but could be
+            int insideObjs = 0;
+            int insideValue = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i].itemProperties.isScrap && !array[i].isInShipRoom && !array[i].isInElevator && !array[i].scrapPersistedThroughRounds)
+                {
+                    objectsOutside++;
+                    outsideValue += array[i].scrapValue;
+                }
+                else if (array[i].itemProperties.isScrap && array[i].isInShipRoom && array[i].isInElevator)
+                {
+                    insideObjs++;
+                    insideValue += array[i].scrapValue;
+                }
+            }
+
+            if (objectsOutside > 0) {
                 DisplayTime = PlanetModBase.lifetime.Value;
                 StyleText();
-                textMesh.text = $"MOON: ${TotalValue:F0} (" + objectAmount + ")";
+                textMesh.text = $"MOON: ${outsideValue:F0} (" + objectsOutside + ")";
                 
                 displayLeft = DisplayTime;
                 if (!counter.activeSelf)
