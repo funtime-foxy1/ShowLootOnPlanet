@@ -51,6 +51,7 @@ namespace ShowLootOnPlanet
         public static BepInEx.Configuration.ConfigEntry<OffsetGUI> offset;
         public static BepInEx.Configuration.ConfigEntry<float> fontSize;
         public static BepInEx.Configuration.ConfigEntry<float> lifetime;
+        public static BepInEx.Configuration.ConfigEntry<bool> logging;
 
         public static ColorType colorValue;
 
@@ -76,6 +77,9 @@ namespace ShowLootOnPlanet
 
             fontSize = Config.Bind("Customize", "Font Size", 19f, "Change the size of the text.");
             LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(fontSize, new FloatStepSliderOptions { RequiresRestart = false, Step = .25f, Min = 6, Max = 24 }));
+
+            logging = Config.Bind("Other", "Logging", false, "Should log into the console? Should be off in most cases.");
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(logging, new BoolCheckBoxOptions { RequiresRestart = false }));
 
             color.SettingChanged += Color_SettingChanged;
 

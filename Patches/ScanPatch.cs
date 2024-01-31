@@ -25,8 +25,8 @@ namespace ShowLootOnPlanet.Patches
                 return;
             /*if (GameNetworkManager.Instance.localPlayerController.isInHangarShipRoom)
                 return;*/
-
-            PlanetModBase.log.LogInfo("SCAN!");
+            if (PlanetModBase.logging.Value)
+                PlanetModBase.log.LogInfo("SCAN!");
             if (!counter)
                 CopyValueCounter();
 
@@ -138,7 +138,8 @@ namespace ShowLootOnPlanet.Patches
         {
             GameObject _counter = GameObject.Find("/Systems/UI/Canvas/IngamePlayerHUD/BottomMiddle/ValueCounter");
             if (!counter)
-                PlanetModBase.log.LogWarning("Failed to find ValueCounter object to copy!");
+                if (PlanetModBase.logging.Value)
+                    PlanetModBase.log.LogWarning("Failed to find ValueCounter object to copy!");
             counter = Object.Instantiate(_counter.gameObject, _counter.transform.parent, false);
             
             counter.transform.Translate(0f, 1f, 0f);
