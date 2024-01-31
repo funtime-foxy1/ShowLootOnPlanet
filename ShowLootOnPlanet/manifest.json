@@ -1,7 +1,0 @@
-{
-	"name": "ShowLootOnPlanet",
-	"description": "Shows loot on the planet, supports ShipLoot by tinyhoot",
-	"version_number": "1.0.5",
-	"dependencies": ["ThePotato-scanForItemsFix-1.0.4", "AinaVT-LethalConfig-1.3.4", "BepInEx-BepInExPack-5.4.2100"],
-	"website_url": "https://github.com/funtime-foxy1/ShowLootOnPlanet"
-}
